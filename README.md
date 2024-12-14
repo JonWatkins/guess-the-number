@@ -125,9 +125,14 @@ After building the project, you can run the "Guess the Number" game on your syst
    will be located in the target/release directory.
 
 3. Run the Game: After building the project, run the game with the following command:
-   ```bash
-   ./target/release/guessing_game
-   ```
+   * On Linux/macOS:
+     ```bash
+     ./target/release/guessing_game
+     ```
+   * On Windows:
+     ```bash
+     .\target\release\guessing_game.exe
+     ```
 
 4. Game Flow:
     * The game will prompt you to input a guess.
