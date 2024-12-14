@@ -63,7 +63,7 @@ pub trait ErrorHandler {
 /// Represents a general invalid input error. This variant is used for situations where
 /// the input doesn't conform to the expected format but is not necessarily a parsing error.
 /// It can be used for cases like empty input or special characters that aren't valid in a guess.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum GuessError {
     InvalidRange,
     ParseError(ParseIntError),
@@ -182,7 +182,7 @@ pub trait Guessable {
 /// # Fields
 /// 
 /// - `value`: The numeric value of the user's guess, stored as a `u32`.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Guess {
     value: u32,
 }
@@ -296,7 +296,7 @@ pub trait Incrementable {
 ///
 /// # Fields
 /// - `count`: A `u32` that holds the current number of guesses made by the user.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct GuessCount {
     count: u32,
 }
@@ -406,6 +406,7 @@ fn get_guess() -> Result<Guess, GuessError> {
 /// - `TooSmall`: Indicates the guess is too small compared to the secret number.
 /// - `TooBig`: Indicates the guess is too large compared to the secret number.
 /// - `Correct`: Indicates the guess is equal to the secret number.
+#[derive(Debug, PartialEq)]
 enum GuessResult {
     TooSmall,
     TooBig,
@@ -501,5 +502,120 @@ fn main() {
                 break;
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // Test for parsing a valid input string into a Guess
+    #[test]
+    fn parse_input_valid() {
+        let valid_input = "42";  // Valid input as a string
+        let result = Guess::parse_input(valid_input);  // Parse the input
+        // Check if the result is Ok, meaning the input was valid
+        assert!(result.is_ok(), "Valid input should result in a valid Guess");
+        // Check if the parsed Guess value is correct
+        assert_eq!(result.unwrap().value(), 42);
+    }
+
+    // Test for handling invalid input that is not a number
+    #[test]
+    fn parse_input_invalid_number() {
+        let invalid_input = "not_a_number";  // Invalid input string
+        let result = Guess::parse_input(invalid_input);  // Try to parse the invalid input
+        // Check if the result is Err, meaning the input could not be parsed
+        assert!(result.is_err(), "Invalid input should result in an error");
+        // Specifically check for a ParseError, although we don't care about the exact details here
+        if let Err(GuessError::ParseError(_)) = result {
+            // No additional assertions needed; we just want to check for the error
+        } else {
+            panic!("Expected ParseError");  // Panic if the error type is not what we expect
+        }
+    }
+
+    // Test for handling input that is out of the acceptable range (1 to 100)
+    #[test]
+    fn parse_input_out_of_range() {
+        let out_of_range_input = "150";  // Input exceeds the valid range
+        let result = Guess::parse_input(out_of_range_input);  // Try to parse the input
+        // Check if the result is an Err with InvalidRange error
+        assert_eq!(result, Err(GuessError::InvalidRange));
+    }
+
+    // Test for creating a Guess with a valid value within the range
+    #[test]
+    fn guess_creation_valid_range() {
+        let guess = Guess::new(50);  // Valid guess value
+        // Check if the guess creation was successful
+        assert!(guess.is_ok(), "Valid guess should be created successfully");
+    }
+
+    // Test for creating a Guess with a value below the valid range
+    #[test]
+    fn guess_creation_invalid_range_low() {
+        let guess = Guess::new(0);  // Guess value is too low (below 1)
+        // Check if the result is Err with InvalidRange error
+        assert_eq!(guess, Err(GuessError::InvalidRange), "Guess below 1 should be invalid");
+    }
+
+    // Test for creating a Guess with a value above the valid range
+    #[test]
+    fn guess_creation_invalid_range_high() {
+        let guess = Guess::new(101);  // Guess value is too high (above 100)
+        // Check if the result is Err with InvalidRange error
+        assert_eq!(guess, Err(GuessError::InvalidRange), "Guess above 100 should be invalid");
+    }
+
+    // Test for handling a correct guess (the guess matches the secret)
+    #[test]
+    fn handle_guess_correct() {
+        let guess = Guess::new(50).unwrap();  // Create a guess with value 50
+        let secret = Guess::new(50).unwrap();  // Secret value is also 50
+        let result = handle_guess(guess, &secret);  // Check the result of the guess
+        // The guess is correct, so the result should be Correct
+        assert_eq!(result, GuessResult::Correct);
+    }
+
+    // Test for handling a guess that is too small
+    #[test]
+    fn handle_guess_too_small() {
+        let guess = Guess::new(30).unwrap();  // Create a guess with value 30
+        let secret = Guess::new(50).unwrap();  // Secret value is 50
+        let result = handle_guess(guess, &secret);  // Check the result of the guess
+        // The guess is too small, so the result should be TooSmall
+        assert_eq!(result, GuessResult::TooSmall);
+    }
+
+    // Test for handling a guess that is too large
+    #[test]
+    fn handle_guess_too_big() {
+        let guess = Guess::new(70).unwrap();  // Create a guess with value 70
+        let secret = Guess::new(50).unwrap();  // Secret value is 50
+        let result = handle_guess(guess, &secret);  // Check the result of the guess
+        // The guess is too big, so the result should be TooBig
+        assert_eq!(result, GuessResult::TooBig);
+    }
+
+    // Test for the initial value of the guess count
+    #[test]
+    fn test_guess_count_initialization() {
+        let guess_count = GuessCount::new();  // Create a new GuessCount object
+        // The initial value of GuessCount should be 0
+        assert_eq!(guess_count.value(), 0, "Initial guess count should be 0");
+    }
+
+    // Test for incrementing the guess count
+    #[test]
+    fn test_guess_count_increment() {
+        let mut guess_count = GuessCount::new();  // Create a new mutable GuessCount object
+        guess_count.increment();  // Increment the guess count
+        // Check if the guess count was correctly incremented to 1
+        assert_eq!(guess_count.value(), 1, "Guess count should be incremented to 1");
+
+        guess_count.increment();  // Increment again
+        // Check if the guess count was correctly incremented to 2
+        assert_eq!(guess_count.value(), 2, "Guess count should be incremented to 2");
     }
 }
