@@ -31,7 +31,7 @@ This is a simple command-line "Guess the Number" game implemented in Rust. The g
 3. **Install the Game**:
    - Clone the repository to your local machine using `git`:
      ```bash
-     git clone https://github.com/your-username/guess-the-number.git
+     git clone https://github.com/JonWatkins/guess-the-number.git
      ```
    - Navigate to the project directory:
      ```bash
@@ -56,7 +56,7 @@ This is a simple command-line "Guess the Number" game implemented in Rust. The g
 3. **Install the Game**:
    - Clone the repository:
      ```bash
-     git clone https://github.com/your-username/guess-the-number.git
+     git clone https://github.com/JonWatkins/guess-the-number.git
      ```
    - Navigate to the project directory:
      ```bash
@@ -81,7 +81,7 @@ This is a simple command-line "Guess the Number" game implemented in Rust. The g
 3. **Install the Game**:
    - Clone the repository:
      ```bash
-     git clone https://github.com/your-username/guess-the-number.git
+     git clone https://github.com/JonWatkins/guess-the-number.git
      ```
    - Navigate to the project directory:
      ```bash
