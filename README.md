@@ -1,6 +1,7 @@
 # Guess the Number Game
 
-This is a simple command-line "Guess the Number" game implemented in Rust. The goal of the game is to guess a randomly generated number between 1 and 100. The program provides feedback on whether the guess is too high or too low, and tracks the number of guesses made.
+This is a simple command-line "Guess the Number" game implemented in Rust. The goal of the game is to guess a randomly generated number between 1 and 100. The program provides feedback on whether the guess is too high or too low, and tracks the number of guesses made. This isn't meant to be the most efficient
+code, I am using this as a fun way to learn the features of Rust. There are a lot of comments for the code mainly to help me remember what im doing.
 
 ## Table of Contents
 
@@ -146,19 +147,15 @@ After building the project, you can run the "Guess the Number" game on your syst
    Guess the number
    Please input your guess:
    50
-   You guessed: 50
    Too small
    Please input your guess:
    75
-   You guessed: 75
    Too big
    Please input your guess:
    62
-   You guessed: 62
    Too small
    Please input your guess:
    68
-   You guessed: 68
    You win, in 4 guesses!
    ```
 
