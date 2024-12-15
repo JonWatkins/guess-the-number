@@ -23,7 +23,9 @@ use guessing_game::{
 fn main() {
     println!("Guess the number");
 
-    // Generate a random secret number between 1 and 100.
+    // Generate a random secret number between 1 and 100. we use the Guess for the secret
+    // number to make it easier to compare the users input Guess against the secret number
+    // using the `.compare` trait in the `handle_guess` method.
     let secret_number =
         Guess::new(get_secret_number(1, 100)).expect("Failed to generate secret number");
 
